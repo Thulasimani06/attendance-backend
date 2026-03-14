@@ -1,0 +1,105 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <title>Attendance Report</title>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Attendance Report</h1>-->
+
+<!--<canvas id="attendanceChart" width="600" height="400"></canvas>-->
+
+<!--<script>-->
+<!--    const STUDENT_API = "http://localhost:8080/students";-->
+<!--    const ATTENDANCE_API = "http://localhost:8080/attendance";-->
+
+<!--    async function generateReport() {-->
+<!--        // Fetch all students-->
+<!--        const studentsRes = await fetch(STUDENT_API);-->
+<!--        const students = await studentsRes.json();-->
+
+<!--        // Fetch all attendance-->
+<!--        const attendanceRes = await fetch(ATTENDANCE_API);-->
+<!--        const attendance = await attendanceRes.json();-->
+
+<!--        const labels = [];-->
+<!--        const percentages = [];-->
+
+<!--        students.forEach(student => {-->
+<!--            labels.push(student.name);-->
+<!--            const studentAttendance = attendance.filter(a => a.studentId === student.id);-->
+<!--            const presentCount = studentAttendance.filter(a => a.present).length;-->
+<!--            const percentage = studentAttendance.length > 0 ? (presentCount / studentAttendance.length) * 100 : 0;-->
+<!--            percentages.push(percentage.toFixed(2));-->
+<!--        });-->
+
+<!--        // Create chart-->
+<!--        const ctx = document.getElementById('attendanceChart').getContext('2d');-->
+<!--        new Chart(ctx, {-->
+<!--            type: 'bar',-->
+<!--            data: {-->
+<!--                labels: labels,-->
+<!--                datasets: [{-->
+<!--                    label: 'Attendance %',-->
+<!--                    data: percentages,-->
+<!--                    backgroundColor: 'rgba(54, 162, 235, 0.6)',-->
+<!--                    borderColor: 'rgba(54, 162, 235, 1)',-->
+<!--                    borderWidth: 1-->
+<!--                }]-->
+<!--            },-->
+<!--            options: {-->
+<!--                scales: {-->
+<!--                    y: {-->
+<!--                        beginAtZero: true,-->
+<!--                        max: 100-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+<!--    generateReport();-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Report</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Daily Attendance Summary</h2>
+
+<input type="date" id="summaryDate">
+<button onclick="loadDailySummary()">View</button>
+
+<h3>✅ Present Students</h3>
+<ul id="presentList"></ul>
+
+<h3>❌ Absent Students</h3>
+<ul id="absentList"></ul>
+
+
+<h2>📊 Daily Attendance Report</h2>
+
+<label>Select Date:</label>
+<input type="date" id="reportDate">
+<button onclick="loadReport()">View Report</button>
+
+<table border="1" id="reportTable">
+    <thead>
+    <tr>
+        <th>Student Name</th>
+        <th>Period</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="report.js"></script>
+</body>
+</html>

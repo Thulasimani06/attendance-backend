@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students</title>
+</head>
+<body>
+<h1>Student Management</h1>
+
+<h2>Add Student</h2>
+<form id="studentForm">
+    Name: <input type="text" id="name" required><br>
+    Reg_no: <input type="text" id="reg_no" required><br>
+    <button type="submit">Add Student</button>
+</form>
+
+<h2>All Students</h2>
+<table border="1" id="studentTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Reg_no</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+    const API_URL = "http://localhost:8080/students";
+
+    // Add Student
+    document.getElementById("studentForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        const name = document.getElementById("name").value;
+        const rollNo = document.getElementById("reg_no").value;
+
+        fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, reg_no })
+        }).then(res => res.json())
+          .then(() => loadStudents());
+    });
+
+    // Load all students
+    function loadStudents(){
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector("#studentTable tbody");
+                tbody.innerHTML = "";
+                data.forEach(s => {
+                    const row = `<tr>
+                        <td>${s.id}</td>
+                        <td>${s.name}</td>
+                        <td>${s.reg_no}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
+    }
+
+    loadStudents();
+</script>
+</body>
+</html>

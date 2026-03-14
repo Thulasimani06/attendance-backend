@@ -1,0 +1,709 @@
+<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
+<!--&lt;!&ndash;<html lang="en">&ndash;&gt;-->
+<!--&lt;!&ndash;<head>&ndash;&gt;-->
+<!--&lt;!&ndash;    <meta charset="UTF-8">&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>Smart Attendance System</title>&ndash;&gt;-->
+<!--&lt;!&ndash;    <style>&ndash;&gt;-->
+<!--&lt;!&ndash;        body {&ndash;&gt;-->
+<!--&lt;!&ndash;            font-family: Arial;&ndash;&gt;-->
+<!--&lt;!&ndash;            background: #f4f6f8;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 30px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .box {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: white;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 20px;&ndash;&gt;-->
+<!--&lt;!&ndash;            width: 400px;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        input, button {&ndash;&gt;-->
+<!--&lt;!&ndash;            width: 100%;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-top: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        button {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: #4CAF50;&ndash;&gt;-->
+<!--&lt;!&ndash;            color: white;&ndash;&gt;-->
+<!--&lt;!&ndash;            border: none;&ndash;&gt;-->
+<!--&lt;!&ndash;            cursor: pointer;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        table {&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-top: 30px;&ndash;&gt;-->
+<!--&lt;!&ndash;            width: 100%;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-collapse: collapse;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        th, td {&ndash;&gt;-->
+<!--&lt;!&ndash;            border: 1px solid #ddd;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;    </style>&ndash;&gt;-->
+<!--&lt;!&ndash;</head>&ndash;&gt;-->
+<!--&lt;!&ndash;<body>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<div class="box">&ndash;&gt;-->
+<!--&lt;!&ndash;    <h2>Mark Attendance</h2>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <input type="number" id="studentId" placeholder="Student ID">&ndash;&gt;-->
+<!--&lt;!&ndash;    <input type="date" id="date">&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <label>&ndash;&gt;-->
+<!--&lt;!&ndash;        <input type="checkbox" id="present"> Present&ndash;&gt;-->
+<!--&lt;!&ndash;    </label>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <button onclick="markAttendance()">Submit</button>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<h2>Attendance Records</h2>&ndash;&gt;-->
+<!--&lt;!&ndash;<table id="attendanceTable">&ndash;&gt;-->
+<!--&lt;!&ndash;    <thead>&ndash;&gt;-->
+<!--&lt;!&ndash;    <tr>&ndash;&gt;-->
+<!--&lt;!&ndash;        <th>ID</th>&ndash;&gt;-->
+<!--&lt;!&ndash;        <th>Student ID</th>&ndash;&gt;-->
+<!--&lt;!&ndash;        <th>Date</th>&ndash;&gt;-->
+<!--&lt;!&ndash;        <th>Present</th>&ndash;&gt;-->
+<!--&lt;!&ndash;    </tr>&ndash;&gt;-->
+<!--&lt;!&ndash;    </thead>&ndash;&gt;-->
+<!--&lt;!&ndash;    <tbody></tbody>&ndash;&gt;-->
+<!--&lt;!&ndash;</table>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+<!--&lt;!&ndash;    const API_URL = "http://localhost:8080/attendance";&ndash;&gt;-->
+
+<!--&lt;!&ndash;    // POST Attendance&ndash;&gt;-->
+<!--&lt;!&ndash;    function markAttendance() {&ndash;&gt;-->
+<!--&lt;!&ndash;        const data = {&ndash;&gt;-->
+<!--&lt;!&ndash;            studentId: document.getElementById("studentId").value,&ndash;&gt;-->
+<!--&lt;!&ndash;            date: document.getElementById("date").value,&ndash;&gt;-->
+<!--&lt;!&ndash;            present: document.getElementById("present").checked&ndash;&gt;-->
+<!--&lt;!&ndash;        };&ndash;&gt;-->
+
+<!--&lt;!&ndash;        fetch(API_URL, {&ndash;&gt;-->
+<!--&lt;!&ndash;            method: "POST",&ndash;&gt;-->
+<!--&lt;!&ndash;            headers: {&ndash;&gt;-->
+<!--&lt;!&ndash;                "Content-Type": "application/json"&ndash;&gt;-->
+<!--&lt;!&ndash;            },&ndash;&gt;-->
+<!--&lt;!&ndash;            body: JSON.stringify(data)&ndash;&gt;-->
+<!--&lt;!&ndash;        })&ndash;&gt;-->
+<!--&lt;!&ndash;        .then(res => res.json())&ndash;&gt;-->
+<!--&lt;!&ndash;        .then(() => {&ndash;&gt;-->
+<!--&lt;!&ndash;            alert("Attendance marked!");&ndash;&gt;-->
+<!--&lt;!&ndash;            loadAttendance();&ndash;&gt;-->
+<!--&lt;!&ndash;        })&ndash;&gt;-->
+<!--&lt;!&ndash;        .catch(err => alert("Error: " + err));&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+
+<!--&lt;!&ndash;    // GET Attendance&ndash;&gt;-->
+<!--&lt;!&ndash;    function loadAttendance() {&ndash;&gt;-->
+<!--&lt;!&ndash;        fetch(API_URL)&ndash;&gt;-->
+<!--&lt;!&ndash;            .then(res => res.json())&ndash;&gt;-->
+<!--&lt;!&ndash;            .then(data => {&ndash;&gt;-->
+<!--&lt;!&ndash;                const tbody = document.querySelector("#attendanceTable tbody");&ndash;&gt;-->
+<!--&lt;!&ndash;                tbody.innerHTML = "";&ndash;&gt;-->
+<!--&lt;!&ndash;                data.forEach(a => {&ndash;&gt;-->
+<!--&lt;!&ndash;                    tbody.innerHTML += `&ndash;&gt;-->
+<!--&lt;!&ndash;                        <tr>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <td>${a.id}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <td>${a.studentId}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <td>${a.date}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <td>${a.present}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </tr>&ndash;&gt;-->
+<!--&lt;!&ndash;                    `;&ndash;&gt;-->
+<!--&lt;!&ndash;                });&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+
+<!--&lt;!&ndash;    // Load attendance on page load&ndash;&gt;-->
+<!--&lt;!&ndash;    loadAttendance();&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</body>&ndash;&gt;-->
+<!--&lt;!&ndash;</html>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
+<!--&lt;!&ndash;<html>&ndash;&gt;-->
+<!--&lt;!&ndash;<head>&ndash;&gt;-->
+<!--&lt;!&ndash;    <meta charset="UTF-8">&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>Smart Attendance Dashboard</title>&ndash;&gt;-->
+<!--&lt;!&ndash;    <link rel="stylesheet" href="/css/style.css">&ndash;&gt;-->
+<!--&lt;!&ndash;</head>&ndash;&gt;-->
+<!--&lt;!&ndash;<body>&ndash;&gt;-->
+<!--&lt;!&ndash;<h1>Welcome to Smart Attendance System</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;<ul>&ndash;&gt;-->
+<!--&lt;!&ndash;    <li><a href="student.html">Students</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;    <li><a href="attendance.html">Attendance</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;    <li><a href="report.html">Reports</a></li>&ndash;&gt;-->
+<!--&lt;!&ndash;</ul>&ndash;&gt;-->
+<!--&lt;!&ndash;</body>&ndash;&gt;-->
+<!--&lt;!&ndash;</html>&ndash;&gt;-->
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Smart Attendance</title>-->
+<!--    <link rel="stylesheet" href="style.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Smart Attendance System</h1>-->
+<!--<p id="date"></p>-->
+<!--<table id="attendanceTable">-->
+<!--    <thead>-->
+<!--    <tr id="periodHeader">-->
+<!--        <th>Student Name</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody id="tableBody">-->
+<!--    </tbody>-->
+<!--</table>-->
+<!--<button id="saveBtn">Save Attendance</button>-->
+
+<!--<script src="attendance.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Smart Attendance</title>-->
+<!--    <link rel="stylesheet" href="style.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Smart Attendance System</h1>-->
+
+<!--&lt;!&ndash; Today's Date &ndash;&gt;-->
+<!--<p id="date"></p>-->
+
+<!--&lt;!&ndash; Attendance Table &ndash;&gt;-->
+<!--<table id="attendanceTable">-->
+<!--    <thead>-->
+<!--    <tr id="periodHeader">-->
+<!--        <th>Student Name</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody id="tableBody">-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--&lt;!&ndash; Save Attendance Button &ndash;&gt;-->
+<!--<button id="saveBtn">Save Attendance</button>-->
+
+<!--<hr>-->
+
+<!--&lt;!&ndash; Monthly Attendance Report &ndash;&gt;-->
+<!--<h2>Monthly Attendance Report</h2>-->
+
+<!--<label for="studentSelect">Select Student:</label>-->
+<!--<select id="studentSelect">-->
+<!--    &lt;!&ndash; Options will be populated dynamically from JS &ndash;&gt;-->
+<!--</select>-->
+
+<!--<label for="monthSelect">Select Month:</label>-->
+<!--<select id="monthSelect">-->
+<!--    <option value="1">January</option>-->
+<!--    <option value="2">February</option>-->
+<!--    <option value="3">March</option>-->
+<!--    <option value="4">April</option>-->
+<!--    <option value="5">May</option>-->
+<!--    <option value="6">June</option>-->
+<!--    <option value="7">July</option>-->
+<!--    <option value="8">August</option>-->
+<!--    <option value="9">September</option>-->
+<!--    <option value="10">October</option>-->
+<!--    <option value="11">November</option>-->
+<!--    <option value="12">December</option>-->
+<!--</select>-->
+
+<!--<label for="yearInput">Year:</label>-->
+<!--<input type="number" id="yearInput" value="2025" />-->
+
+<!--<button id="reportBtn">Generate Report</button>-->
+
+<!--<p id="attendancePercentage"></p> &lt;!&ndash; Display percentage &ndash;&gt;-->
+
+<!--<script src="attendance.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Smart Attendance</title>-->
+<!--    <link rel="stylesheet" href="style.css">-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h1>Smart Attendance System</h1>-->
+
+<!--<p id="date"></p>-->
+
+<!--&lt;!&ndash; Attendance Table &ndash;&gt;-->
+<!--<table id="attendanceTable" border="1">-->
+<!--    <thead>-->
+<!--    <tr id="periodHeader">-->
+<!--        <th>Student Name</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody id="tableBody"></tbody>-->
+<!--</table>-->
+
+<!--<button id="saveBtn">Save Attendance</button>-->
+
+<!--<hr>-->
+
+<!--<h2>Monthly Attendance Report</h2>-->
+
+<!--<label>Select Student:</label>-->
+<!--<select id="studentSelect"></select>-->
+
+<!--<label>Select Month:</label>-->
+<!--<select id="monthSelect">-->
+<!--    <option value="1">January</option>-->
+<!--    <option value="2">February</option>-->
+<!--    <option value="3">March</option>-->
+<!--    <option value="4">April</option>-->
+<!--    <option value="5">May</option>-->
+<!--    <option value="6">June</option>-->
+<!--    <option value="7">July</option>-->
+<!--    <option value="8">August</option>-->
+<!--    <option value="9">September</option>-->
+<!--    <option value="10">October</option>-->
+<!--    <option value="11">November</option>-->
+<!--    <option value="12">December</option>-->
+<!--</select>-->
+
+<!--<label>Year:</label>-->
+<!--<input type="number" id="yearInput" value="2025">-->
+
+<!--<button id="reportBtn">Generate Report</button>-->
+
+<!--<p id="attendancePercentage"></p>-->
+
+<!--&lt;!&ndash; ✅ THIS TABLE WAS MISSING &ndash;&gt;-->
+<!--<table border="1">-->
+<!--    <thead id="reportHeader"></thead>-->
+<!--    <tbody id="reportBody"></tbody>-->
+<!--</table>-->
+
+<!--<script src="attendance.js"></script>-->
+<!--<script src="report.js"></script>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Smart Attendance</title>-->
+<!--    <link rel="stylesheet" href="style.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Smart Attendance System</h1>-->
+
+<!--&lt;!&ndash; Today's Date &ndash;&gt;-->
+<!--<p id="date"></p>-->
+
+<!--&lt;!&ndash; Attendance Table &ndash;&gt;-->
+<!--<table id="attendanceTable">-->
+<!--    <thead>-->
+<!--    <tr id="periodHeader">-->
+<!--        <th>Student Name</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody id="tableBody">-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--&lt;!&ndash; Save Attendance Button &ndash;&gt;-->
+<!--<button id="saveBtn">Save Attendance</button>-->
+
+<!--<hr>-->
+
+<!--&lt;!&ndash; Monthly Attendance Report &ndash;&gt;-->
+<!--<h2>Monthly Attendance Report</h2>-->
+
+<!--<label for="studentSelect">Select Student:</label>-->
+<!--<select id="studentSelect">-->
+<!--    &lt;!&ndash; Options will be populated dynamically from JS &ndash;&gt;-->
+<!--</select>-->
+
+<!--<label for="monthSelect">Select Month:</label>-->
+<!--<select id="monthSelect">-->
+<!--    <option value="1">January</option>-->
+<!--    <option value="2">February</option>-->
+<!--    <option value="3">March</option>-->
+<!--    <option value="4">April</option>-->
+<!--    <option value="5">May</option>-->
+<!--    <option value="6">June</option>-->
+<!--    <option value="7">July</option>-->
+<!--    <option value="8">August</option>-->
+<!--    <option value="9">September</option>-->
+<!--    <option value="10">October</option>-->
+<!--    <option value="11">November</option>-->
+<!--    <option value="12">December</option>-->
+<!--</select>-->
+
+<!--<label for="yearInput">Year:</label>-->
+<!--<input type="number" id="yearInput" value="2025" />-->
+
+<!--<button id="reportBtn">Generate Report</button>-->
+
+<!--<p id="attendancePercentage"></p> &lt;!&ndash; Display percentage &ndash;&gt;-->
+
+<!--<script src="attendance.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Attendance System</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; text-align: center; }
+        table { margin-bottom: 20px; }
+
+        .student-photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 8px; vertical-align: middle; }
+
+        /* Absent students table container */
+        .absent-table-container{ width: fit-content; max-width: 500px; margin-top: 20px; }
+        /* Table style */
+        #absentTable{ border-collapse: collapse; table-layout: fixed; width: 100%; }
+        /* Cells */
+        #absentTable th,
+        #absentTable td{ border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+        /* Name column width */
+        #absentTable td:first-child{ width: 250px; }
+
+        /* Button container */
+        .button-container{ display: flex; justify-content: center; margin-top: 20px; }
+        /* Save button */
+        #saveBtn{ padding: 10px 25px; font-size: 16px; border-radius: 6px; border: none; background-color: #2d8cf0; color: white; cursor: pointer; width: auto; min-width: 150px; }
+        /* Responsive behavior */
+        @media (max-width:600px){ #saveBtn{ width: 100%; } }
+
+
+        /* =====================
+   CHECKBOX STYLE
+===================== */
+input[type="checkbox"]{
+    width:18px;
+    height:18px;
+    transform:scale(1.2);
+    cursor:pointer;
+}
+
+input[type="checkbox"]:checked{
+    accent-color:#4f6df5;
+}
+
+
+
+<!--/* CARD STYLE SECTIONS */-->
+section{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:25px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.15);
+}
+
+<!--/* TABLE STYLE */-->
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+
+<!--/* ROW HOVER EFFECT */-->
+tbody tr:hover{
+    background:#f3f6ff;
+    transition:0.3s;
+}
+
+
+<!--/* BUTTONS */-->
+<!--button{-->
+<!--    background:linear-gradient(45deg,#4facfe,#00f2fe);-->
+<!--    border:none;-->
+<!--    padding:12px 22px;-->
+<!--    border-radius:8px;-->
+<!--    color:white;-->
+<!--    font-weight:bold;-->
+<!--    cursor:pointer;-->
+<!--    transition:0.3s;-->
+<!--}-->
+
+<!--/* BUTTON HOVER ANIMATION */-->
+<!--button:hover{-->
+<!--    transform:translateY(-3px);-->
+<!--    box-shadow:0 5px 15px rgba(0,0,0,0.3);-->
+<!--}-->
+
+<!--/* SAVE BUTTON CENTER */-->
+<!--.button-container{-->
+<!--    display:flex;-->
+<!--    justify-content:center;-->
+<!--    margin-top:20px;-->
+<!--}-->
+
+
+#workingDays{
+    font-weight:bold;
+}
+
+
+/* MOBILE RESPONSIVE */
+@media(max-width:768px){
+
+table{
+font-size:12px;
+}
+
+button{
+width:100%;
+margin-top:10px;
+}
+
+}
+
+    </style>
+</head>
+<body>
+<h1>Smart Attendance System</h1>
+
+<!-- Today's Date -->
+<p id="date"></p>
+
+<section>
+<!-- Attendance Table -->
+<h2>Mark Attendance</h2>
+<table id="attendanceTable">
+    <thead>
+    <tr id="periodHeader">
+        <th>Student Name</th>
+    </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+</table>
+
+<div class="button-container">
+    <button id="saveBtn">Save Attendance</button>
+</div>
+
+</section>
+<br>
+<hr>
+
+<!-- Monthly Attendance Report -->
+<h2>Monthly Attendance Report</h2>
+
+<label>Select Student:</label>
+<select id="studentSelect"></select>
+
+<label>Select Month:</label>
+<select id="monthSelect">
+    <option value="1">January</option>
+    <option value="2">February</option>
+    <option value="3">March</option>
+    <option value="4">April</option>
+    <option value="5">May</option>
+    <option value="6">June</option>
+    <option value="7">July</option>
+    <option value="8">August</option>
+    <option value="9">September</option>
+    <option value="10">October</option>
+    <option value="11">November</option>
+    <option value="12">December</option>
+</select>
+
+<label>Year:</label>
+<input type="number" id="yearInput" value="2026" min="2000" max="2100">
+
+<button id="reportBtn">Generate Report</button>
+<br><br>
+<p id="workingDays"></p>
+<!--<p id="attendancePercentage"></p>-->
+<p id="attendancePercentage"></p>
+<br><br>
+<table id="reportTable">
+    <thead id="reportHeader"></thead>
+    <tbody id="reportBody"></tbody>
+</table>
+
+<hr>
+
+
+<h2>Absent Students Report</h2>
+
+<label>Select Date:</label>
+<input type="date" id="absentDate">
+
+<button onclick="loadAbsentStudents()">Show Absent Students</button>
+<br><br>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Student</th>
+<!--        <th>Absent Periods</th>-->
+<!--        <th>Attendance %</th>-->
+    </tr>
+    </thead>
+
+    <tbody id="absentTableBody"></tbody>
+</table>
+<br><br><br>
+<script src="attendance.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+    .then(function(reg){
+    console.log("Service Worker Registered");
+    });
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>smart Attendance System</title>-->
+<!--    <link rel="stylesheet" href="style.css">-->
+
+<!--    <style>-->
+<!--        .h1{-->
+<!--        color:blueviolet;-->
+<!--        }-->
+<!--        table, th, td {-->
+<!--            border: 1px solid black;-->
+<!--            border-collapse: collapse;-->
+<!--            padding: 8px;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        /* Break row */-->
+<!--        .break-row td {-->
+<!--            background: #fff3cd;-->
+<!--            font-weight: bold;-->
+<!--            color: #856404;-->
+<!--        }-->
+
+<!--        /* Lunch row */-->
+<!--        .lunch-row td {-->
+<!--            background: #ffe0b2;-->
+<!--            font-weight: bold;-->
+<!--            color: #e65100;-->
+<!--        }-->
+<!--        .profile-pic {-->
+<!--            width: 40px;-->
+<!--            height: 40px;-->
+<!--            border-radius: 50%;-->
+<!--        }-->
+
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+
+<!--<h1>Smart Attendance System</h1>-->
+
+<!--&lt;!&ndash; Date &ndash;&gt;-->
+<!--<p id="date"></p>-->
+
+<!--&lt;!&ndash; Attendance Table &ndash;&gt;-->
+<!--<h2>Mark Attendance</h2>-->
+
+<!--<label>Select Period:</label>-->
+<!--<select id="periodSelect"></select>-->
+
+<!--<table id="attendanceTable">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>students</th>-->
+<!--        <th>present</th>-->
+
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody id="attendanceBody"></tbody>-->
+<!--</table>-->
+
+<!--<button id="saveBtn">Save Attendance</button>-->
+
+
+<!--<hr>-->
+
+<!--&lt;!&ndash; Monthly Attendance Report &ndash;&gt;-->
+<!--<h2>Monthly Attendance Report</h2>-->
+
+<!--<label>Select Student:</label>-->
+<!--<select id="studentSelect"></select>-->
+
+<!--<label>Select Month:</label>-->
+<!--<select id="monthSelect">-->
+<!--    <option value="1">January</option>-->
+<!--    <option value="2">February</option>-->
+<!--    <option value="3">March</option>-->
+<!--    <option value="4">April</option>-->
+<!--    <option value="5">May</option>-->
+<!--    <option value="6">June</option>-->
+<!--    <option value="7">July</option>-->
+<!--    <option value="8">August</option>-->
+<!--    <option value="9">September</option>-->
+<!--    <option value="10">October</option>-->
+<!--    <option value="11">November</option>-->
+<!--    <option value="12">December</option>-->
+<!--</select>-->
+
+<!--<label>Year:</label>-->
+<!--<input type="number" id="yearInput" value="2026" min="2000" max="2100">-->
+
+<!--<button id="reportBtn">Generate Report</button>-->
+
+<!--<p id="attendancePercentage"></p>-->
+
+<!--<table id="reportTable">-->
+<!--    <thead id="reportHeader"></thead>-->
+<!--    <tbody id="reportBody"></tbody>-->
+<!--</table>-->
+
+<!--<script src="attendance.js"></script>-->
+
+<!--</body>-->
+<!--</html>-->
+

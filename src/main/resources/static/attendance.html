@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Attendance</title>
+
+
+</head>
+<body>
+<h1>Attendance Management</h1>
+
+<h2>Mark Attendance</h2>
+<form id="attendanceForm">
+    Student ID: <input type="number" id="studentId" required><br>
+    Present: <input type="checkbox" id="present"><br>
+    <button type="submit">Mark Attendance</button>
+</form>
+
+<h2>All Attendance</h2>
+<table border="1" id="attendanceTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Student ID</th>
+        <th>Date</th>
+        <th>Present</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+    const API_URL = "http://localhost:8080/attendance";
+
+    // Mark Attendance
+    document.getElementById("attendanceForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        const studentId = document.getElementById("studentId").value;
+        const present = document.getElementById("present").checked;
+
+        fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ studentId, present, date: new Date().toISOString() })
+        }).then(res => res.json())
+          .then(() => loadAttendance());
+    });
+
+    // Load all attendance
+    function loadAttendance(){
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector("#attendanceTable tbody");
+                tbody.innerHTML = "";
+                data.forEach(a => {
+                    const row = `<tr>
+                        <td>${a.id}</td>
+                        <td>${a.studentId}</td>
+                        <td>${new Date(a.date).toLocaleDateString()}</td>
+                        <td>${a.present}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
+    }
+
+    loadAttendance();
+</script>
+</body>
+</html>
